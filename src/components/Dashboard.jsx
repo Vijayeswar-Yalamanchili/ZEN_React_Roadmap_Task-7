@@ -53,7 +53,7 @@ function Dashboard() {
                 <Card.Body>
                   <Card.Title><strong>Title :</strong> {e.title}</Card.Title>
                   <Card.Text><strong>Author :</strong> {e.author}</Card.Text>
-                  <Card.Text><strong>ISBN No :</strong> {e.ISBN}</Card.Text>
+                  <Card.Text><strong>ISBN No :</strong> {e.isbnNum}</Card.Text>
                   <Card.Text><strong>Description :</strong> {e.description}</Card.Text>
                   <Card.Text><strong>Published At :</strong> {e.date}</Card.Text>
                   <Button variant="secondary" onClick={()=>navigate(`/edit-book/${e.id}`)}>Edit</Button>

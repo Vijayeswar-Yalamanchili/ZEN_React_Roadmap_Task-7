@@ -16,7 +16,7 @@ function EditBook() {
   const [initialValues, setValues] = useState({ 
     title:'',
     author:'',
-    isbnNum : '',
+    isbnNum:'',
     description:'',
     date:''
   })

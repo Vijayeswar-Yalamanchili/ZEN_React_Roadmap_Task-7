@@ -16,7 +16,7 @@ function AddBook() {
     initialValues:{ 
       title:'',
       author:'',
-      isbnNum: '',
+      isbnNum:'',
       description:'',
       date:''
     },
