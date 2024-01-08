@@ -3,8 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Topbar from './common/Topbar'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import{ API_URL} from '../App'
+import ApiService from '../utils/ApiService';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
@@ -13,14 +12,14 @@ function Dashboard() {
   const [bookData, setBookData] = useState([])
   const navigate = useNavigate()
 
-
   useEffect(()=>{
-    getUserData()
+    getBookData()
   },[])
 
-  const getUserData = async() => {
+  const getBookData = async() => {
     try {
-      let res = await axios.get(API_URL)
+      let res = await ApiService.get('/books')
+      // console.log(res);
       if(res.status === 200){
         setBookData(res.data)
       }
@@ -31,9 +30,10 @@ function Dashboard() {
 
   const handleDelete = async(id) => {
     try {
-      let res = await axios.delete(`${API_URL}/${id}`)
+      let res = await ApiService.delete(`/books/${id}`)
+      // console.log(res);
       if(res.status === 200){
-        getUserData();
+        getBookData();
       }
     } catch (error) {
       alert("data removal failed")

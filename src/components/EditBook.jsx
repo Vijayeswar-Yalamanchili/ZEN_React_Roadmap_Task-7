@@ -1,104 +1,123 @@
 import React, { useState, useEffect } from 'react'
 import Topbar from './common/Topbar'
 import Form from 'react-bootstrap/Form';
-// import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { Container } from 'react-bootstrap';
-import axios from 'axios';
-import{ API_URL} from '../App'
+import ApiService from '../utils/ApiService';
 import { useNavigate,useParams } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup'
 
 function EditBook() {
 
-  let {id} = useParams()
+  let params = useParams()
   const navigate = useNavigate()
+  const [initialValues, setValues] = useState({ 
+    title:'',
+    author:'',
+    isbnNum : '',
+    description:'',
+    date:''
+  })
 
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [isbnNum, setIsbnNum] = useState("")
-  const [description, setDescription] = useState("")
-  const [date, setDate] = useState("")
-  // const [imgFile, setImgFile] = useState("")
-  
-  const handleEdit = async() => {
-    try {
-      let data = { title,author,isbnNum,description,date }
-      // console.log(data);
-      let res = await axios.put(`${API_URL}/${id}`,data) 
-      // console.log(res);
-      if(res.status === 200){                    
-        navigate('/')
+  let formik = useFormik({
+    initialValues:initialValues,
+    validationSchema: Yup.object({
+      title : Yup.string().max(20,'Title cannot exceed 20 characters')
+                          .min(3,"Title cannot be shorter than 3 characters")
+                          .required("Title cannot be empty"),
+      author : Yup.string().max(20,'Author cannot exceed 20 characters')
+                           .min(3,"Author cannot be shorter than 3 characters")
+                           .required("Author cannot be empty"),
+      isbnNum : Yup.string().matches(/^\d{13}$/,' Enter a valid 13 digit ISBN Number')
+                            .required("ISBN Number cannot be empty"),
+      description : Yup.string().max(200,'Description cannot exceed 200 characters')
+                                .min(5,"Description cannot be shorter than 5 characters")
+                                .required("Description cannot be empty"),
+      date : Yup.string().required("Date cannot be empty")
+    }) ,
+    enableReinitialize: true,
+    onSubmit : async(values) => {
+      // console.log(values);
+      let {id} = params
+      values.id = id
+      try {
+        // console.log(values);
+        let res = await ApiService.put(`/books/${id}`,values)
+        if(res.status === 200){
+          navigate('/dashboard')
+        }
+      } catch (error) {
+        alert("Failed to Edit a book")
       }
-    } catch (error) {
-      alert("Failed to Edit a book")
     }
-  }
+  })
 
-  const getUserdataById = async() => {
+  const getBookdataById = async() => {
+    let {id} = params
     try {
-      let res = await axios.get(`${API_URL}/${id}`)
+      let res = await ApiService.get(`/books/${id}`)
       if(res.status===200){
         console.log(res.data);
-        setTitle(res.data.title)
-        setAuthor(res.data.author)
-        setIsbnNum(res.data.ISBN)
-        setDescription(res.data.description)
-        setDate(res.data.date)        
-      }      
+        setValues({ 
+          title:res.data.title,
+          author:res.data.author,
+          isbnNum:res.data.isbnNum,
+          description:res.data.description,
+          date:res.data.date,
+        })
+      }    
     }catch (error) {
-      toast.error("Internal error")
+      alert("Internal error")
     }
   }
 
   useEffect(()=>{
-    getUserdataById();
+    getBookdataById();
   },[])
 
   return <>
     <Topbar/>
     <div>
       <Container>
-        <Form className='mt-5'>
+        <Form className='mt-5' onSubmit={formik.handleSubmit}>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
-              <Form.Control type="text" placeholder="Enter Book Title" value={title} onChange={(e)=>{setTitle(e.target.value)}}/>
+              <Form.Control type="text" id="title" name="title" onChange={formik.handleChange} value={formik.values.title} onBlur={formik.handleBlur} placeholder="Enter Book Title"/>
+              {formik.touched.title && formik.errors.title ? (<div style={{color: 'red'}}>{formik.errors.title}</div>) : null}
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Author</Form.Label>
-              <Form.Control type="text" placeholder="Enter Author Name" value={author} onChange={(e)=>{setAuthor(e.target.value)}}/>
+              <Form.Control type="text" id="author" name="author" onChange={formik.handleChange} value={formik.values.author} onBlur={formik.handleBlur} placeholder="Enter Author Name"/>
+              {formik.touched.author && formik.errors.author ? (<div style={{color: 'red'}}>{formik.errors.author}</div>) : null}
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>ISBN Number</Form.Label>
-              <Form.Control type="text" placeholder="Enter ISBN Number" value={isbnNum} onChange={(e)=>{setIsbnNum(e.target.value)}}/>
+              <Form.Control type="text" id="isbnNum" name="isbnNum" onChange={formik.handleChange} value={formik.values.isbnNum} onBlur={formik.handleBlur} placeholder="Enter ISBN Number"/>
+              {formik.touched.isbnNum && formik.errors.isbnNum ? (<div style={{color: 'red'}}>{formik.errors.isbnNum}</div>) : null}
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows={3} placeholder='Enter Description' value={description} onChange={(e)=>{setDescription(e.target.value)}}/>
+              <Form.Control as="textarea" rows={3} id="description" name="description" onChange={formik.handleChange} value={formik.values.description} onBlur={formik.handleBlur} placeholder='Enter Description'/>
+              {formik.touched.description && formik.errors.description ? (<div style={{color: 'red'}}>{formik.errors.description}</div>) : null}
             </Form.Group>
           </Col>
-          {/* <Row> */}
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Published at</Form.Label>
-                <Form.Control type='date' placeholder="Enter published date" value={date} onChange={(e)=>{setDate(e.target.value)}}/>
-              </Form.Group>
-            </Col>
-            {/* <Col md={4}>
-              <Form.Group className="mb-3">
-                <Form.Label>Upload Cover Image file</Form.Label>
-                <Form.Control type='file' onChange={(e)=>{setImgFile(e.target.value)}}/>
-              </Form.Group>
-            </Col> */}
-          {/* </Row> */}
-          <Button variant="primary" onClick={()=>{handleEdit()}}>Submit</Button>
+          <Col md={6}>
+            <Form.Group className="mb-3">
+              <Form.Label>Published at</Form.Label>
+              <Form.Control type='date' id="date" name="date" onChange={formik.handleChange} value={formik.values.date} onBlur={formik.handleBlur} placeholder="Enter published date"/>
+              {formik.touched.date && formik.errors.date ? (<div style={{color: 'red'}}>{formik.errors.date}</div>) : null}
+            </Form.Group>
+          </Col>
+          <Button variant="primary" type='submit'>Submit</Button>
         </Form>
       </Container>
     </div>
