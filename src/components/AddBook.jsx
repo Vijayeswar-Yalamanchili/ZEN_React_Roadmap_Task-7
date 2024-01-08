@@ -24,12 +24,12 @@ function AddBook() {
       let data = { title,author,isbnNum,description,date }
       // console.log(data);
       let res = await axios.post(API_URL,data) 
-      console.log(res);
+      // console.log(res);
       if(res.status === 201){                     // 201 is for creating status
         navigate('/')
       }
     } catch (error) {
-      alert("failed to create a book")
+      alert("Failed to create a book")
     }
   }
 

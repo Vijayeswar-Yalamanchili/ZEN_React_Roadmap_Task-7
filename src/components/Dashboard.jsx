@@ -49,14 +49,14 @@ function Dashboard() {
             return <>
               <div  style={{ width: 'max-content'}}>
               <Card className='mt-5' style={{ width: '25rem'}} key={i}>
-                <Card.Img variant="top" src={e.image} /> 
+                {/* <Card.Img variant="top" src={e.image} />  */}
                 <Card.Body>
                   <Card.Title><strong>Title :</strong> {e.title}</Card.Title>
                   <Card.Text><strong>Author :</strong> {e.author}</Card.Text>
                   <Card.Text><strong>ISBN No :</strong> {e.ISBN}</Card.Text>
                   <Card.Text><strong>Description :</strong> {e.description}</Card.Text>
                   <Card.Text><strong>Published At :</strong> {e.date}</Card.Text>
-                  <Button variant="secondary">Edit</Button>
+                  <Button variant="secondary" onClick={()=>navigate(`/edit-book/${e.id}`)}>Edit</Button>
                   &nbsp;
                   <Button variant="danger" onClick={()=>{handleDelete(e.id)}}>Delete</Button>
                 </Card.Body>
