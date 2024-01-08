@@ -12,8 +12,8 @@ function Topbar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link onClick={()=>navigate('/')}>Dashboard</Nav.Link>
-                        <Nav.Link onClick={()=>navigate('/add-book')}>Add Book</Nav.Link>                        
+                        <Nav.Link onClick={()=>navigate('/')}> Books Dashboard</Nav.Link>
+                        <Nav.Link onClick={()=>navigate('/dashboard-author')}>Authors Dashboard</Nav.Link>                        
                     </Nav>
                 </Navbar.Collapse>
             </Container>

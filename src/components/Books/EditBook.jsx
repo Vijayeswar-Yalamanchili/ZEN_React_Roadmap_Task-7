@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import Topbar from './common/Topbar'
+import Topbar from '../common/Topbar';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { Container } from 'react-bootstrap';
-import ApiService from '../utils/ApiService';
+import ApiService from '../../utils/ApiService';
 import { useNavigate,useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'
@@ -46,7 +46,7 @@ function EditBook() {
         // console.log(values);
         let res = await ApiService.put(`/books/${id}`,values)
         if(res.status === 200){
-          navigate('/dashboard')
+          navigate('/')
         }
       } catch (error) {
         alert("Failed to Edit a book")

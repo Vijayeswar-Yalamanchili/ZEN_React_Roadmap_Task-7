@@ -1,13 +1,13 @@
 import React,  { useState,useEffect }  from 'react'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Topbar from './common/Topbar'
+import Topbar from '../common/Topbar'
 import { useNavigate } from 'react-router-dom';
-import ApiService from '../utils/ApiService';
+import ApiService from '../../utils/ApiService';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
-function Dashboard() {
+function DashboardBook() {
 
   const [bookData, setBookData] = useState([])
   const navigate = useNavigate()
@@ -43,7 +43,8 @@ function Dashboard() {
   return <>
     <Topbar/>
     <Container>
-      <Row className='d-flex justify-content-center flex-row'>
+      <Button className='mt-3' variant='primary' onClick={()=>navigate(`/add-book`)}>Add Book</Button>
+      <Row className='d-flex justify-content-start flex-row'>
         {
           bookData.map((e,i)=>{
             return <>
@@ -71,4 +72,4 @@ function Dashboard() {
   </>
 }
 
-export default Dashboard
+export default DashboardBook
