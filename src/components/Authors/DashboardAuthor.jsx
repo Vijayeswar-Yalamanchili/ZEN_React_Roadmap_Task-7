@@ -62,7 +62,7 @@ function DashboardAuthor() {
                     authorData.map((e,i)=>{
                       return <>
                         <tr key={i}>
-                          <td>{e.id}</td>
+                          <td>{i+1}</td>
                           <td>{e.name}</td>
                           <td>{e.date}</td>
                           <td>{e.bio}</td>
